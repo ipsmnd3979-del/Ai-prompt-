@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Photo Style Codes — Card Collage</title>
+<style>
+:root{
+  --bg:#07080c; --panel:#101219; --card:#151821; --text:#f5f7fb;
+  --muted:#9aa2b1; --line:rgba(255,255,255,.09); --accent:#7c5cff;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  background:
+    radial-gradient(circle at 10% 0%,rgba(124,92,255,.18),transparent 30%),
+    radial-gradient(circle at 90% 10%,rgba(0,210,255,.12),transparent 25%),var(--bg);
+  color:var(--text);
+}
+.wrap{max-width:1250px;margin:auto;padding:28px 18px 60px}
+.hero{display:grid;grid-template-columns:1.25fr .75fr;gap:18px;align-items:stretch}
+.hero-main,.upload{
+  background:linear-gradient(145deg,rgba(255,255,255,.07),rgba(255,255,255,.025));
+  border:1px solid var(--line);border-radius:26px;padding:28px;
+  box-shadow:0 20px 70px rgba(0,0,0,.28);backdrop-filter:blur(16px)
+}
+.badge{display:inline-flex;padding:7px 11px;border:1px solid var(--line);border-radius:999px;color:#c9c2ff;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+h1{font-size:clamp(34px,6vw,68px);line-height:.95;margin:18px 0 12px;letter-spacing:-.055em}
+.sub{color:var(--muted);max-width:700px;font-size:16px;line-height:1.65}
+.searchrow{display:flex;gap:10px;margin-top:22px}
+input[type=search]{
+  width:100%;padding:15px 17px;border-radius:15px;border:1px solid var(--line);
+  background:#0c0e14;color:white;outline:none;font-size:15px
+}
+input[type=search]:focus{border-color:rgba(124,92,255,.8);box-shadow:0 0 0 4px rgba(124,92,255,.12)}
+.upload{display:flex;flex-direction:column;justify-content:center;min-height:260px}
+.upload h2{margin:0 0 7px}
+.upload p{color:var(--muted);font-size:13px;line-height:1.5}
+.drop{
+  margin-top:14px;border:1px dashed rgba(255,255,255,.22);border-radius:18px;
+  padding:20px;text-align:center;cursor:pointer;background:rgba(255,255,255,.025)
+}
+.drop:hover{border-color:#8d7bff;background:rgba(124,92,255,.06)}
+#preview{display:none;max-height:120px;max-width:100%;border-radius:14px;margin:12px auto 0}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:26px 0 14px}
+.count{color:var(--muted);font-size:14px}
+select{
+  background:#10131a;color:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px
+}
+.grid{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px
+}
+.card{
+  position:relative;background:linear-gradient(145deg,#171a23,#11131a);
+  border:1px solid var(--line);border-radius:20px;padding:18px;
+  min-height:165px;transition:.22s ease;overflow:hidden
+}
+.card:before{
+  content:"";position:absolute;width:130px;height:130px;right:-60px;top:-60px;
+  background:radial-gradient(circle,rgba(124,92,255,.24),transparent 65%);
+}
+.card:hover{transform:translateY(-4px);border-color:rgba(124,92,255,.55);box-shadow:0 15px 40px rgba(0,0,0,.28)}
+.num{font-size:11px;color:#777f90;font-weight:800;letter-spacing:.08em}
+.code{
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:#bfb4ff;
+  font-size:18px;font-weight:800;margin:8px 0 9px
+}
+.desc{color:#aeb5c2;font-size:13px;line-height:1.55;margin:0 0 17px}
+.copy{
+  border:1px solid var(--line);background:#0d1016;color:#fff;border-radius:10px;
+  padding:8px 11px;cursor:pointer;font-size:12px;font-weight:700
+}
+.copy:hover{background:#1b1f29}
+.empty{display:none;text-align:center;color:var(--muted);padding:40px}
+.toast{
+  position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);
+  background:#f4f5f7;color:#111;padding:11px 15px;border-radius:12px;
+  font-weight:800;font-size:13px;opacity:0;pointer-events:none;transition:.2s;z-index:10
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+footer{margin-top:30px;color:#6f7787;font-size:12px;text-align:center}
+@media(max-width:900px){.hero{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.wrap{padding:18px 12px 45px}.hero-main,.upload{padding:21px;border-radius:21px}.grid{grid-template-columns:1fr}.toolbar{align-items:flex-start;flex-direction:column}.searchrow{margin-top:16px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <div class="hero-main">
+      <span class="badge">Card Collage · AI Photo Styles</span>
+      <h1>Upload a photo.<br>Type one style.</h1>
+      <p class="sub">
+        A responsive command library for turning an uploaded photo into a polished visual concept.
+        Search a style, copy the command, and use it with your image.
+      </p>
+      <div class="searchrow">
+        <input id="search" type="search" placeholder="Search styles… e.g. Luxury, Neon, Rainforest">
+      </div>
+    </div>
+    <div class="upload">
+      <h2>Photo Preview</h2>
+      <p>Upload an image to preview it locally. The image is not uploaded anywhere by this page.</p>
+      <label class="drop" for="photo">
+        <strong>Choose photo</strong><br>
+        <small>JPG · PNG · WEBP</small>
+        <input id="photo" type="file" accept="image/*" hidden>
+        <img id="preview" alt="Uploaded photo preview">
+      </label>
+    </div>
+  </section>
+
+  <div class="toolbar">
+    <div class="count" id="count"></div>
+    <select id="category">
+      <option value="all">All categories</option>
+    </select>
+  </div>
+
+  <main id="grid" class="grid"></main>
+  <div id="empty" class="empty">No matching style codes found.</div>
+
+  <footer>
+    Source-based library: the supplied PDF contains 100 product-image marketing commands.
+    These are presented here as reusable style concepts, not official ChatGPT commands.
+  </footer>
+</div>
+<div id="toast" class="toast">Copied!</div>
+
+<script>
+const styles = [
+["Viral & High-Impact Advertising","/Times Square","Put the product into a massive Times Square-style digital advertising environment."],
+["Viral & High-Impact Advertising","/Gravity Reverse","Create a surreal reverse-gravity product advertisement with the product defying gravity."],
+["Viral & High-Impact Advertising","/Premium Showcase","Turn the product into a luxury hero advertisement with premium studio lighting."],
+["Viral & High-Impact Advertising","/Viral Ad","Create a scroll-stopping social media advertisement designed for maximum visual impact."],
+["Viral & High-Impact Advertising","/Billboard Takeover","Place the product on a gigantic urban billboard campaign."],
+["Viral & High-Impact Advertising","/Iconic Launch","Create a dramatic product-launch visual with cinematic presentation."],
+["Viral & High-Impact Advertising","/Super Bowl Ad","Create a high-budget sports-commercial-style product advertisement."],
+["Viral & High-Impact Advertising","/Brand Domination","Make the product appear as if it is dominating a major global advertising campaign."],
+["Viral & High-Impact Advertising","/Impossible Ad","Create an impossible-but-photorealistic advertising concept around the product."],
+["Viral & High-Impact Advertising","/Scroll Stopper","Design an extremely attention-grabbing social media visual with the product as the hero."],
+
+["Luxury & Premium","/Luxury Campaign","Turn the product into a high-fashion luxury advertising campaign."],
+["Luxury & Premium","/Black Luxury","Create a dark black-on-black premium product advertisement with controlled highlights."],
+["Luxury & Premium","/Gold Edition","Present the product in an elegant black-and-gold luxury environment."],
+["Luxury & Premium","/Velvet Royal","Place the product on luxurious velvet with dramatic premium lighting."],
+["Luxury & Premium","/Jewelry Ad","Photograph the product with the precision and lighting language of a luxury jewelry campaign."],
+["Luxury & Premium","/Editorial Luxury","Create a sophisticated fashion-editorial product campaign."],
+["Luxury & Premium","/Penthouse","Showcase the product inside an ultra-modern luxury penthouse."],
+["Luxury & Premium","/Private Collection","Make the product look like a rare collector's edition."],
+["Luxury & Premium","/Luxury Shelf","Create an expensive-looking retail shelf display for the product."],
+["Luxury & Premium","/Million Dollar Shot","Produce a highly polished advertising image that feels like a million-dollar campaign."],
+
+["Cinematic Worlds","/Cinematic","Give the product a dramatic cinematic commercial look."],
+["Cinematic Worlds","/Neon World","Build a futuristic neon environment around the product."],
+["Cinematic Worlds","/Cyberpunk","Turn the product into the hero of a cyberpunk advertising scene."],
+["Cinematic Worlds","/Futuristic Lab","Showcase the product inside a sophisticated futuristic laboratory."],
+["Cinematic Worlds","/Space Station","Place the product inside a photorealistic orbital space station."],
+["Cinematic Worlds","/Mars Campaign","Create a cinematic Mars environment featuring the product."],
+["Cinematic Worlds","/Moon Landing","Present the product as if it has landed on the Moon."],
+["Cinematic Worlds","/Galaxy Portal","Make the product emerge through a dramatic cosmic portal."],
+["Cinematic Worlds","/Time Portal","Create a campaign where the product appears to travel through time."],
+["Cinematic Worlds","/Future City","Showcase the product inside a massive futuristic metropolis."],
+
+["Nature & Environment","/Rainforest","Create a lush cinematic rainforest product campaign."],
+["Nature & Environment","/Waterfall","Place the product near a dramatic waterfall with atmospheric mist."],
+["Nature & Environment","/Ocean Deep","Create an underwater product advertisement surrounded by realistic aquatic elements."],
+["Nature & Environment","/Desert Storm","Showcase the product in a dramatic desert environment with blowing sand."],
+["Nature & Environment","/Arctic","Create a premium icy Arctic product campaign."],
+["Nature & Environment","/Volcano","Place the product in a dramatic volcanic environment while keeping it commercially believable."],
+["Nature & Environment","/Mountain Peak","Showcase the product at a cinematic mountain summit."],
+["Nature & Environment","/Tropical Escape","Create a luxurious tropical lifestyle campaign around the product."],
+["Nature & Environment","/Botanical","Surround the product with carefully arranged premium botanical elements."],
+["Nature & Environment","/Earth Element","Build an advertising scene around natural earth, stone, water, fire, or air elements."],
+
+["Food, Beverage & FMCG","/Fresh Splash","Create a dynamic liquid-splash advertisement around the product."],
+["Food, Beverage & FMCG","/Ingredient Explosion","Surround the product with its key ingredients frozen in mid-air."],
+["Food, Beverage & FMCG","/Fresh Harvest","Place the product into a premium farm-to-table environment."],
+["Food, Beverage & FMCG","/Taste Burst","Create a visually explosive food advertisement designed to communicate flavor."],
+["Food, Beverage & FMCG","/Cold Crush","Give the product an ultra-refreshing cold beverage campaign aesthetic."],
+["Food, Beverage & FMCG","/Kitchen Counter","Create a premium modern-kitchen lifestyle shot."],
+["Food, Beverage & FMCG","/Breakfast Table","Place the product naturally into an aspirational breakfast scene."],
+["Food, Beverage & FMCG","/Ingredient Story","Visually show where the product's ingredients come from."],
+["Food, Beverage & FMCG","/Sensory Ad","Create an advertisement that visually communicates taste, aroma, texture, or freshness."],
+["Food, Beverage & FMCG","/FMCG Hero","Create a polished mass-market FMCG advertising visual with strong product hierarchy."],
+
+["Fashion, Beauty & Lifestyle","/Fashion Campaign","Turn the product into a high-end fashion campaign."],
+["Fashion, Beauty & Lifestyle","/Runway","Showcase the product in a dramatic fashion-runway environment."],
+["Fashion, Beauty & Lifestyle","/Beauty Editorial","Create a sophisticated beauty-editorial campaign."],
+["Fashion, Beauty & Lifestyle","/Model Lifestyle","Show the product naturally being used by a professional-looking model."],
+["Fashion, Beauty & Lifestyle","/Street Style","Put the product into a stylish modern street-fashion environment."],
+["Fashion, Beauty & Lifestyle","/Vanity Shot","Create an elegant luxury vanity setup around the product."],
+["Fashion, Beauty & Lifestyle","/Morning Routine","Show the product naturally as part of a premium morning routine."],
+["Fashion, Beauty & Lifestyle","/Night Routine","Create a sophisticated evening self-care or lifestyle scene."],
+["Fashion, Beauty & Lifestyle","/Influencer Ad","Create a polished creator-style product advertisement that feels native to social media."],
+["Fashion, Beauty & Lifestyle","/Magazine Cover","Turn the product into the hero of a premium magazine-cover composition."],
+
+["E-commerce & Conversion","/Amazon Hero","Create a clean e-commerce hero image optimized for product clarity."],
+["E-commerce & Conversion","/Shopify Hero","Create a premium product image suitable for an online-store hero section."],
+["E-commerce & Conversion","/Catalog Shot","Create a clean professional catalog photograph."],
+["E-commerce & Conversion","/White Background","Isolate the product against a flawless commercial white background."],
+["E-commerce & Conversion","/360 Showcase","Create a presentation that communicates the product from multiple useful angles."],
+["E-commerce & Conversion","/Feature Focus","Make the product's most important feature visually dominant."],
+["E-commerce & Conversion","/Scale Reference","Show the product alongside familiar objects to communicate its physical size."],
+["E-commerce & Conversion","/In-Hand","Show the exact product being held naturally for scale and usability."],
+["E-commerce & Conversion","/Before After","Create a visual before-and-after composition that communicates the product's benefit."],
+["E-commerce & Conversion","/Product Benefits","Create a clean commercial composition visually communicating the product's key benefits."],
+
+["Creative Product Transformations","/Floating Product","Make the product elegantly float above the environment."],
+["Creative Product Transformations","/Glass Chamber","Display the product inside a futuristic transparent glass chamber."],
+["Creative Product Transformations","/Crystal World","Build a crystalline environment around the product."],
+["Creative Product Transformations","/Liquid World","Create a surreal world where the product is surrounded by flowing liquid."],
+["Creative Product Transformations","/Miniature World","Make the product appear gigantic inside a tiny miniature environment."],
+["Creative Product Transformations","/Giant Product","Turn the product into a massive landmark within a realistic environment."],
+["Creative Product Transformations","/Paper Universe","Recreate the scene entirely from premium paper and crafted materials."],
+["Creative Product Transformations","/Clay World","Create a stylized clay-like advertising universe around the product."],
+["Creative Product Transformations","/Hologram","Turn the product presentation into a futuristic holographic advertisement."],
+["Creative Product Transformations","/Portal Reveal","Create a dramatic scene where the product emerges from a glowing portal."],
+
+["Product Design & Brand Presentation","/Packaging Mockup","Create a professional packaging mockup while preserving the product's identity."],
+["Product Design & Brand Presentation","/Brand World","Build a complete visual world around the product's existing brand identity."],
+["Product Design & Brand Presentation","/Color World","Build the entire environment using colors derived from the product packaging."],
+["Product Design & Brand Presentation","/Campaign Board","Create a visual campaign board showing multiple advertising directions for the product."],
+["Product Design & Brand Presentation","/Brand Refresh","Create a modern visual presentation while preserving the core product identity."],
+["Product Design & Brand Presentation","/Retail Display","Showcase the product as it would appear in a premium retail environment."],
+["Product Design & Brand Presentation","/Shelf Dominance","Create a retail shelf where the product visually commands attention."],
+["Product Design & Brand Presentation","/Unboxing","Create a premium unboxing experience around the product."],
+["Product Design & Brand Presentation","/Product Reveal","Create a dramatic reveal moment where the product is unveiled."],
+["Product Design & Brand Presentation","/Launch Kit","Create a cohesive visual launch campaign around the product."],
+
+["Social Media & Campaign Content","/Instagram Ad","Create a premium vertical Instagram advertising composition."],
+["Social Media & Campaign Content","/Reel Cover","Design a highly clickable vertical cover image for a product Reel."],
+["Social Media & Campaign Content","/Story Ad","Create a mobile-first vertical story advertisement."],
+["Social Media & Campaign Content","/Carousel Cover","Create a bold first-slide visual designed to make people swipe."],
+["Social Media & Campaign Content","/Thumbnail","Turn the product into a high-contrast, attention-grabbing video thumbnail."],
+["Social Media & Campaign Content","/UGC Ad","Create a believable user-generated-content-style product advertisement."],
+["Social Media & Campaign Content","/Product Meme","Turn the product into a clever, visually shareable meme-style advertisement."],
+["Social Media & Campaign Content","/Seasonal Campaign","Adapt the product into a premium seasonal marketing campaign."],
+["Social Media & Campaign Content","/Festival Campaign","Create a culturally relevant festive advertising visual around the product."],
+["Social Media & Campaign Content","/Global Campaign","Turn the product into a complete-looking international advertising campaign."]
+];
+
+const grid = document.getElementById("grid");
+const search = document.getElementById("search");
+const category = document.getElementById("category");
+const count = document.getElementById("count");
+const empty = document.getElementById("empty");
+const toast = document.getElementById("toast");
+
+[...new Set(styles.map(x=>x[0]))].forEach(c=>{
+  const o=document.createElement("option"); o.value=c; o.textContent=c; category.appendChild(o);
+});
+
+function render(){
+  const q=search.value.toLowerCase().trim();
+  const cat=category.value;
+  const filtered=styles.filter((x)=>
+    (cat==="all"||x[0]===cat) &&
+    (!q || x[0].toLowerCase().includes(q)||x[1].toLowerCase().includes(q)||x[2].toLowerCase().includes(q))
+  );
+  grid.innerHTML="";
+  filtered.forEach((x,i)=>{
+    const original=styles.indexOf(x)+1;
+    const card=document.createElement("article");
+    card.className="card";
+    card.innerHTML=`
+      <div class="num">STYLE ${String(original).padStart(3,"0")} · ${x[0]}</div>
+      <div class="code">${x[1]}</div>
+      <p class="desc">${x[2]}</p>
+      <button class="copy" data-code="${x[1]}">Copy command</button>`;
+    grid.appendChild(card);
+  });
+  count.textContent=`Showing ${filtered.length} of ${styles.length} style codes`;
+  empty.style.display=filtered.length?"none":"block";
+}
+grid.addEventListener("click",e=>{
+  if(!e.target.matches(".copy")) return;
+  navigator.clipboard.writeText(e.target.dataset.code).then(()=>{
+    toast.classList.add("show");
+    setTimeout(()=>toast.classList.remove("show"),1200);
+  });
+});
+search.addEventListener("input",render);
+category.addEventListener("change",render);
+
+document.getElementById("photo").addEventListener("change",e=>{
+  const file=e.target.files[0];
+  if(!file)return;
+  const img=document.getElementById("preview");
+  img.src=URL.createObjectURL(file);
+  img.style.display="block";
+});
+render();
+</script>
+</body>
+</html>

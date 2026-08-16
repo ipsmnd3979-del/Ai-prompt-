@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Photo Code Studio — upload a photo, choose a visual style, preview a professional card-collage website mockup, and browse 300 photo prompt codes.">
+<title>Photo Code Studio — 300 ChatGPT Photo Codes</title>
+<style>
+:root{
+  --ink:#101214; --muted:#667078; --paper:#f6f8f9; --card:#fff;
+  --line:#dce3e7; --accent:#cfeef4; --accent2:#eaf8fa;
+  --shadow:0 18px 50px rgba(16,18,20,.10);
+  --radius:24px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.topbar{
+  position:sticky;top:0;z-index:30;background:rgba(246,248,249,.88);
+  backdrop-filter:blur(16px);border-bottom:1px solid rgba(220,227,231,.8);
+}
+.nav{max-width:1200px;margin:auto;padding:14px 22px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.brand{font-weight:900;letter-spacing:-.04em;font-size:20px}
+.nav a{color:var(--ink);text-decoration:none;font-size:13px;font-weight:700}
+.hero{max-width:1200px;margin:0 auto;padding:48px 22px 24px}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:26px;align-items:stretch}
+.hero-copy{padding:20px 0}
+.eyebrow{text-transform:uppercase;letter-spacing:.16em;font-size:11px;font-weight:900;color:#667078}
+h1{font-size:clamp(42px,6vw,76px);line-height:.92;letter-spacing:-.065em;margin:12px 0 22px}
+.hero-copy p{max-width:600px;color:var(--muted);font-size:17px;line-height:1.65;margin:0 0 25px}
+.pills{display:flex;flex-wrap:wrap;gap:8px}
+.pill{padding:9px 12px;background:#fff;border:1px solid var(--line);border-radius:999px;font-size:12px;font-weight:800}
+.preview-shell{
+  min-height:420px;border-radius:30px;background:#dff3f6;position:relative;
+  overflow:hidden;box-shadow:var(--shadow);border:1px solid #cfe2e5;
+}
+.preview-header{height:155px;padding:28px 30px;display:flex;justify-content:space-between;align-items:flex-start}
+.preview-header h2{margin:0;font-size:30px;letter-spacing:-.05em}
+.preview-window{
+  position:absolute;left:30px;right:30px;bottom:24px;top:112px;background:#fff;
+  border-radius:20px;box-shadow:0 20px 45px rgba(0,0,0,.14);padding:16px;
+}
+.mini-image{height:130px;border-radius:14px;background:#e9eef0 center/cover no-repeat;display:flex;align-items:end;padding:12px}
+.mini-image span{background:rgba(255,255,255,.88);padding:7px 10px;border-radius:10px;font-size:11px;font-weight:900}
+.mini-lines{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:12px}
+.mini-lines i{display:block;height:9px;border-radius:9px;background:#e8edef}
+.mini-lines i:nth-child(2){width:75%}.mini-lines i:nth-child(3){width:55%}
+.section{max-width:1200px;margin:0 auto;padding:26px 22px 70px}
+.panel{
+  background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:0 10px 35px rgba(16,18,20,.06);padding:24px;
+}
+.panel h2{margin:0 0 8px;font-size:28px;letter-spacing:-.04em}
+.panel-sub{margin:0 0 20px;color:var(--muted);font-size:14px}
+.uploader{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.drop{
+  min-height:270px;border:2px dashed #b8c5ca;border-radius:20px;background:#f9fbfb;
+  display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;overflow:hidden;position:relative
+}
+.drop.has-image{background-size:cover;background-position:center;border-style:solid}
+.drop-overlay{position:absolute;inset:0;background:rgba(255,255,255,.72);display:flex;align-items:center;justify-content:center}
+.drop-content{position:relative;z-index:2}
+.drop strong{display:block;font-size:18px;margin-bottom:7px}
+.drop small{color:var(--muted)}
+.file-btn,.primary{
+  border:0;background:var(--ink);color:#fff;border-radius:12px;padding:12px 16px;font-weight:900;margin-top:14px
+}
+.controls{display:flex;flex-direction:column;gap:14px}
+label{font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.08em}
+select,input[type=search]{
+  width:100%;border:1px solid var(--line);background:#fff;border-radius:12px;
+  padding:13px 14px;outline:none
+}
+select:focus,input:focus{border-color:#89979d;box-shadow:0 0 0 3px #e9f4f6}
+.style-preview{
+  padding:18px;background:var(--accent2);border-radius:18px;border:1px solid #d8ecef;
+  min-height:120px
+}
+.style-preview h3{margin:0 0 7px;font-size:20px;letter-spacing:-.03em}
+.style-preview p{margin:0;color:#56636a;font-size:13px;line-height:1.55}
+.output-card{margin-top:18px;background:#111416;color:#fff;border-radius:18px;padding:18px}
+.output-card .code-line{color:#d8f5fa;line-height:1.55;font-size:13px;white-space:pre-wrap}
+.copy{float:right;border:1px solid #394247;background:#20272b;color:#fff;border-radius:9px;padding:7px 10px;font-size:12px;font-weight:800}
+.toolbar{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:28px 0 16px}
+.search{flex:1;min-width:230px;position:relative}
+.search input{padding-left:40px}
+.search-icon{position:absolute;left:14px;top:12px;color:#879399}
+.counter{font-size:13px;font-weight:900;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.code-card{
+  background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;
+  transition:.2s;position:relative
+}
+.code-card:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(16,18,20,.08)}
+.code-top{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px}
+.code-num{font-size:11px;font-weight:900;color:#7a878d}
+.tag{font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;padding:6px 8px;background:#edf7f8;border-radius:999px}
+.code-card h3{font-size:17px;margin:0 0 7px;letter-spacing:-.02em}
+.code-card p{font-size:13px;line-height:1.55;color:#59666c;margin:0 0 14px}
+.code-actions{display:flex;gap:8px}
+.small-btn{border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 10px;font-size:11px;font-weight:900}
+.small-btn:hover{background:#f1f5f6}
+.empty{grid-column:1/-1;text-align:center;padding:50px;color:var(--muted)}
+.footer{text-align:center;color:#7a878d;font-size:12px;padding:30px 20px 50px}
+.toast{
+  position:fixed;left:50%;bottom:25px;transform:translate(-50%,20px);opacity:0;
+  background:#111416;color:#fff;padding:11px 15px;border-radius:12px;font-size:12px;font-weight:900;
+  transition:.25s;z-index:100;pointer-events:none
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:850px){
+  .hero-grid,.uploader{grid-template-columns:1fr}
+  .grid{grid-template-columns:1fr}
+  .preview-shell{min-height:360px}
+}
+@media(max-width:520px){
+  .nav{padding:12px 15px}.hero,.section{padding-left:15px;padding-right:15px}
+  h1{font-size:48px}.panel{padding:17px}.preview-header h2{font-size:24px}
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <nav class="nav">
+    <div class="brand">PHOTO CODE STUDIO</div>
+    <a href="#codes">300 PHOTO CODES ↓</a>
+  </nav>
+</header>
+
+<main>
+<section class="hero">
+  <div class="hero-grid">
+    <div class="hero-copy">
+      <div class="eyebrow">Upload photo → choose style → generate</div>
+      <h1>Turn one photo into a professional web mockup.</h1>
+      <p>Card-collage inspired photo presentation with a clean editorial interface. Upload your image, select a style, copy the generated ChatGPT photo code, and browse 300 ready-to-use style ideas.</p>
+      <div class="pills">
+        <span class="pill">Responsive</span><span class="pill">HTML + CSS + JS</span>
+        <span class="pill">Copy codes</span><span class="pill">300 styles</span>
+      </div>
+    </div>
+    <div class="preview-shell">
+      <div class="preview-header">
+        <div>
+          <div class="eyebrow">Website mockup</div>
+          <h2>Find a Style!</h2>
+        </div>
+        <div class="pill">CARD / COLLAGE</div>
+      </div>
+      <div class="preview-window">
+        <div class="mini-image" id="miniImage"><span id="miniLabel">Your uploaded photo</span></div>
+        <div class="mini-lines"><i></i><i></i><i></i></div>
+        <div class="mini-lines"><i></i><i></i><i></i></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="panel" id="generator">
+    <h2>Photo → Style → Code</h2>
+    <p class="panel-sub">Upload a photo and choose a visual style. This page generates a ready-to-copy prompt/code description for your image workflow.</p>
+    <div class="uploader">
+      <div class="drop" id="drop">
+        <input id="file" type="file" accept="image/*" hidden>
+        <div class="drop-content">
+          <strong>Upload your photo</strong>
+          <small>JPG, PNG or WEBP • processed locally in your browser</small><br>
+          <button class="file-btn" id="choose" type="button">Choose photo</button>
+        </div>
+      </div>
+      <div class="controls">
+        <label for="style">Type of style only</label>
+        <select id="style"></select>
+        <div class="style-preview">
+          <h3 id="styleTitle">Minimal Editorial</h3>
+          <p id="styleDesc">Clean typography, generous white space, premium fashion-editorial composition and subtle shadows.</p>
+        </div>
+        <button class="primary" id="generate" type="button">Generate website mockup code</button>
+        <div class="output-card">
+          <button class="copy" id="copyGenerated" type="button">Copy</button>
+          <div class="code-line" id="generated"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="codes">
+  <div class="panel">
+    <h2>All 300 ChatGPT Photo Codes</h2>
+    <p class="panel-sub">Search by code number, style, mood, lighting, camera or visual treatment. Click Copy to copy a complete prompt.</p>
+    <div class="toolbar">
+      <div class="search">
+        <span class="search-icon">⌕</span>
+        <input id="search" type="search" placeholder="Search 300 codes…">
+      </div>
+      <div class="counter" id="counter">300 styles</div>
+    </div>
+    <div class="grid" id="grid"></div>
+  </div>
+</section>
+</main>
+
+<footer class="footer">PHOTO CODE STUDIO • Single-file HTML • No external libraries required</footer>
+<div class="toast" id="toast">Copied!</div>
+
+<script>
+const styleData = [
+  ["Minimal Editorial","Clean typography, generous white space, premium fashion-editorial composition and subtle shadows."],
+  ["Cinematic","Film-inspired contrast, atmospheric depth, dramatic framing and cinematic color grading."],
+  ["Luxury Fashion","High-end campaign lighting, polished styling, refined composition and premium magazine finish."],
+  ["Vintage Film","35mm film grain, soft halation, authentic analog texture and nostalgic tones."],
+  ["Streetwear","Urban editorial energy, bold framing, natural texture and contemporary street-fashion mood."],
+  ["Dark Moody","Low-key lighting, deep shadows, controlled highlights and sophisticated dramatic mood."],
+  ["Golden Hour","Warm sunset light, soft rim light, glowing skin tones and natural outdoor atmosphere."],
+  ["Studio Portrait","Controlled studio lighting, clean backdrop, precise skin detail and professional portrait finish."],
+  ["Retro 90s","90s editorial styling, flash photography feel, grain, muted saturation and nostalgic framing."],
+  ["Monochrome","Elegant black-and-white treatment, rich tonal range, directional light and timeless portrait mood."],
+  ["Cyberpunk Neon","Neon reflections, futuristic city atmosphere, colored rim light and glossy cinematic contrast."],
+  ["Japanese Editorial","Quiet composition, refined negative space, subtle colors and contemporary Japanese magazine aesthetic."]
+];
+
+const categories = [
+"Minimal Editorial","Cinematic","Luxury Fashion","Vintage Film","Streetwear","Dark Moody","Golden Hour","Studio Portrait",
+"Retro 90s","Monochrome","Cyberpunk Neon","Japanese Editorial","Soft Portrait","Urban Night","Travel Editorial",
+"Magazine Cover","Polaroid","Dreamy Pastel","Black & White","Warm Documentary","Cool Documentary","Brutalist",
+"Glassmorphism","Card Collage","Clean Corporate","Luxury Hotel","Coffee Shop","Rainy Window","Beach Editorial",
+"Mountain Editorial","Forest Portrait","Desert Editorial","City Lights","Classic Hollywood","Film Noir","Old Money",
+"Quiet Luxury","Modern Gentleman","Casual Lifestyle","Athleisure","Denim Campaign","Beauty Editorial","Product Campaign",
+"Album Cover","Music Poster","Movie Poster","Travel Poster","Minimal Poster","Art Gallery","Architectural",
+"Fashion Week","Runway","Paparazzi Flash","Direct Flash","Softbox","Rembrandt Light","Rim Light","Backlit",
+"Silhouette","Volumetric Light","Foggy Atmosphere","Neon Blue","Neon Red","Teal Orange","Muted Earth",
+"High Key","Low Key","Editorial Flash","Disposable Camera","Point & Shoot","35mm Grain","Medium Format",
+"Instant Film","Analog Street","Dream Sequence","Surreal Portrait","Double Exposure","Mirror Portrait",
+"Reflection","Window Reflection","Shadow Play","Hard Sun","Overcast","Rainy Street","After Rain","Night Drive",
+"Luxury Car","Motorcycle Editorial","Airport Editorial","Train Journey","Cafe Lifestyle","Bookstore",
+"Office Portrait","Creative Studio","Rooftop","Balcony","Hotel Room","Bedroom Editorial","Minimal Home",
+"Concrete Architecture","Beige Architecture","Brutalist Interior","Modern Interior","Vintage Interior","Greenhouse",
+"Botanical","Tropical","Kerala Editorial","Himalayan","Desert Road","Coastal","Monsoon","Winter",
+"Autumn","Spring","Summer","Festival Portrait","Wedding Editorial","Pre-Wedding","Birthday Campaign","Family Portrait",
+"Couple Portrait","Friends Lifestyle","Father & Son","Mother & Son","Kids Editorial","Pet Lifestyle","Corporate Headshot",
+"LinkedIn Premium","Founder Portrait","Creative Director","Designer Portrait","Writer Portrait","Artist Portrait",
+"Musician Portrait","Actor Portfolio","Model Portfolio","Influencer Campaign","Social Media Cover","Instagram Story",
+"Instagram Poster","YouTube Thumbnail","Website Hero","Landing Page","Portfolio Hero","Bento Grid","Glass Card",
+"Floating Card","Magazine Spread","Lookbook","Contact Sheet","Polaroid Wall","Moodboard","Scrapbook",
+"Paper Texture","Torn Paper","Newsprint","Risograph","Screen Print","Ink Illustration","Watercolor",
+"Oil Paint","Acrylic","Pencil Sketch","Charcoal","Fashion Illustration","Anime Inspired","Manga Inspired",
+"Graphic Novel","Comic Cover","3D Clay","Claymorphism","Sculptural","Chrome","Metallic","Pearlescent",
+"Holographic","Iridescent","Transparent","Liquid Glass","Frosted Glass","Crystal","Marble",
+"Gold Accent","Silver Accent","Black Luxury","White Luxury","Red Editorial","Blue Editorial","Green Editorial",
+"Brown Editorial","Purple Editorial","Orange Editorial","Crimson","Emerald","Cobalt","Ivory",
+"Charcoal","Warm Beige","Cool Grey","Soft Blue","Dusty Rose","Olive","Terracotta","Sand",
+"Natural Light","Window Light","Candle Light","Practical Light","Street Lamp","Car Headlights","Flash + Ambient",
+"Golden Rim","Blue Hour","Twilight","Dawn","Midnight","Sunrise","Sunset","Stormy",
+"Fog","Mist","Smoke","Dust","Snow","Bokeh","Lens Flare","Prism","Chromatic Aberration",
+"Motion Blur","Long Exposure","Freeze Frame","Wide Angle","Telephoto","85mm Portrait","50mm Portrait",
+"35mm Street","24mm Architecture","Macro Detail","Fisheye","Tilt Shift","Soft Focus","Sharp Focus",
+"Shallow Depth","Deep Focus","Dutch Angle","Top Down","Low Angle","Eye Level","Close Up","Full Body",
+"Half Body","Profile","Three Quarter","Back View","Over Shoulder","Walking Shot","Seated Portrait",
+"Leaning Pose","Candid","Editorial Pose","Relaxed Pose","Power Pose","Action Portrait","Dynamic Motion",
+"Luxury Minimal","Premium Commercial","High-End Advertisement","Brand Campaign","Fashion Catalog","E-commerce Editorial",
+"Visual Identity","Creative Agency","Tech Brand","Fintech","Startup Founder","SaaS Hero","App Landing",
+"AI Product","Future Tech","Digital Art","Futuristic Minimal","Retro Future","Space Editorial","Sci-Fi",
+"Fantasy Portrait","Royal Portrait","Regal","Mythic","Cultural Editorial","Heritage","Traditional",
+"Contemporary Indian","South Indian Editorial","Kerala Traditional","Temple Architecture","Festive Indian",
+"Modern Ethnic","Kurta Editorial","Suit Editorial","Casual Shirt","Denim Look","Monochrome Suit","Luxury Watch",
+"Sunglasses Campaign","Sneaker Campaign","Jewelry Editorial","Fragrance Ad","Skincare Campaign","Hair Campaign"
+];
+
+const details = [
+  "preserve the subject's identity and natural facial structure; realistic skin texture; professional composition",
+  "use authentic photographic texture, natural proportions, realistic hands and subtle depth of field",
+  "keep the original person recognizable and avoid plastic skin, face reshaping or artificial beautification",
+  "premium editorial finish with realistic pores, believable lighting and refined visual hierarchy",
+  "high-resolution photographic realism with natural asymmetry, accurate anatomy and polished art direction"
+];
+
+const lighting = ["soft directional light","dramatic side light","warm ambient light","controlled studio light","natural window light"];
+const cameras = ["85mm portrait lens","50mm lens","35mm documentary lens","24mm wide-angle lens","medium-format look"];
+
+const codes = Array.from({length:300}, (_,i) => {
+  const cat = categories[i % categories.length];
+  const d = details[i % details.length];
+  const light = lighting[i % lighting.length];
+  const cam = cameras[i % cameras.length];
+  const title = `${cat} Photo Code`;
+  const prompt = `Create an ultra-realistic ${cat.toLowerCase()} portrait/editorial image from the uploaded reference photo. ${d}. Use ${light}, ${cam}, tasteful depth of field and a premium art-directed composition. Maintain the original identity, face, expression and realistic skin texture. No cartoon look, no CGI face, no plastic skin, no distorted hands, no watermark.`;
+  return {n:i+1,title,cat,prompt};
+});
+
+const styleSelect = document.getElementById("style");
+styleData.forEach(([name])=>{
+  const o=document.createElement("option");o.value=name;o.textContent=name;styleSelect.appendChild(o);
+});
+function updateStyle(){
+  const x=styleData.find(v=>v[0]===styleSelect.value)||styleData[0];
+  document.getElementById("styleTitle").textContent=x[0];
+  document.getElementById("styleDesc").textContent=x[1];
+}
+styleSelect.addEventListener("change",updateStyle);
+
+const file=document.getElementById("file"), drop=document.getElementById("drop"), mini=document.getElementById("miniImage");
+document.getElementById("choose").onclick=()=>file.click();
+file.onchange=e=>loadImage(e.target.files?.[0]);
+drop.addEventListener("dragover",e=>{e.preventDefault();drop.style.borderColor="#6e7d83"});
+drop.addEventListener("dragleave",()=>drop.style.borderColor="");
+drop.addEventListener("drop",e=>{e.preventDefault();loadImage(e.dataTransfer.files?.[0])});
+
+function loadImage(f){
+  if(!f || !f.type.startsWith("image/")) return;
+  const url=URL.createObjectURL(f);
+  drop.style.backgroundImage=`url("${url}")`; drop.classList.add("has-image");
+  drop.querySelector(".drop-content").style.opacity=".0";
+  mini.style.backgroundImage=`url("${url}")`;
+  document.getElementById("miniLabel").textContent=f.name;
+}
+function generatedText(){
+  const s=styleSelect.value;
+  return `STYLE ONLY / WEBSITE MOCKUP
+Create a professional responsive website mockup from the uploaded photo using a ${s} visual direction. Use a card-collage layout, clean typography, premium spacing, realistic photo treatment, subtle shadows and responsive behavior. Preserve the person's exact identity and natural facial features. Build the presentation as a polished HTML/CSS/JavaScript experience.`;
+}
+function renderGenerated(){document.getElementById("generated").textContent=generatedText()}
+document.getElementById("generate").onclick=()=>{renderGenerated();toast("Mockup code generated")};
+document.getElementById("copyGenerated").onclick=()=>copy(generatedText());
+renderGenerated();
+
+function render(){
+  const q=document.getElementById("search").value.trim().toLowerCase();
+  const filtered=codes.filter(c=>(`${c.n} ${c.title} ${c.cat} ${c.prompt}`).toLowerCase().includes(q));
+  document.getElementById("counter").textContent=`${filtered.length} ${filtered.length===1?"style":"styles"}`;
+  const grid=document.getElementById("grid");
+  if(!filtered.length){grid.innerHTML='<div class="empty">No photo codes match your search.</div>';return}
+  grid.innerHTML=filtered.map(c=>`
+    <article class="code-card">
+      <div class="code-top"><span class="code-num">CODE ${String(c.n).padStart(3,"0")}</span><span class="tag">${escapeHtml(c.cat)}</span></div>
+      <h3>${escapeHtml(c.title)}</h3>
+      <p>${escapeHtml(c.prompt)}</p>
+      <div class="code-actions"><button class="small-btn" onclick="copy(codes[${c.n-1}].prompt)">Copy prompt</button><button class="small-btn" onclick="useStyle('${escapeAttr(c.cat)}')">Use style</button></div>
+    </article>`).join("");
+}
+document.getElementById("search").addEventListener("input",render);
+function useStyle(name){
+  const opt=[...styleSelect.options].find(o=>o.value===name);
+  if(opt)styleSelect.value=name;
+  else { styleSelect.value=styleData.find(x=>x[0].toLowerCase().includes(name.toLowerCase()))?.[0] || styleData[0][0]; }
+  updateStyle(); document.getElementById("generator").scrollIntoView({behavior:"smooth"});
+}
+function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function escapeAttr(s){return s.replace(/'/g,"\\'")}
+async function copy(text){
+  try{await navigator.clipboard.writeText(text);toast("Copied to clipboard")}
+  catch(e){
+    const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();toast("Copied");
+  }
+}
+let toastTimer;
+function toast(msg){
+  const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove("show"),1500);
+}
+render();
+</script>
+</body>
+</html>
